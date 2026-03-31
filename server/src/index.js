@@ -35,7 +35,7 @@ app.use((err, req, res, next) => {
 });
 
 // Catch-all: serve index.html for any non-API route (must be last)
-app.get("*", (req, res) => {
+app.get("/{*path}", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
