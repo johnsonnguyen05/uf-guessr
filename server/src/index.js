@@ -1,5 +1,10 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,9 +20,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.json({ message: "Server is running" });
-});
+// Serve built frontend
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok", uptime: process.uptime() });
@@ -27,9 +31,14 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res
     .status(err.status || 500)
-    .json({ error: err.message || "Internal server error"});
+    .json({ error: err.message || "Internal server error" });
+});
+
+// Catch-all: serve index.html for any non-API route (must be last)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on ${process.env.CORS_ORIGIN || "http://localhost"}:${PORT}`)
-})
+  console.log(`Server is running on ${process.env.CORS_ORIGIN || "http://localhost"}:${PORT}`);
+});
