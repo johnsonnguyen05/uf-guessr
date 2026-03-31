@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve built frontend
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok", uptime: process.uptime() });
@@ -36,7 +36,7 @@ app.use((err, req, res, next) => {
 
 // Catch-all: serve index.html for any non-API route (must be last)
 app.get("/{*path}", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../../client/dist/index.html"));
 });
 
 app.listen(PORT, () => {
